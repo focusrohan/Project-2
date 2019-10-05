@@ -154,3 +154,9 @@ third_agri_emis, first_crop, second_crop, third_crop,
 land_emis, merged_agr_emiss, merged_crop, pop
 CASCADE;
 ---------------------------------------------------
+-- Need to add primary key to complete_merge_table for SQLAlchemy
+-- to use automap_base()
+-- Need to also change a name in one column
+ALTER TABLE complete_merge_table ADD COLUMN id SERIAL PRIMARY KEY;
+ALTER TABLE complete_merge_table RENAME COLUMN yield TO yields;
+---------------------------------------------------
