@@ -7,16 +7,12 @@ var filteredCountries = []; //array of filtered counties based on the dropdown m
 var populationArray = [];  //array of population for a given country
 var productionArray = []; //array of crop production for a given country
 var co2Array = []; //array of CO2 emission for a given country
-
 init();
-
 //Init
 function init(){
     getData();
     updatePlotly();
 };
-
-
 //Read in JSON
 function getData(){
     console.log("start")
@@ -27,15 +23,10 @@ function getData(){
         //console.log("total data", totalData)
         getCountryList();
         getDropDownMenu();
-
-
         // Call updatePlotly() when a change takes place to the DOM
         d3.selectAll("#selDataset").on("change", updatePlotly);  
     });
 };
-
-
-
 //populate and create the dropdown menu
 function getDropDownMenu(){
     console.log("Country List",countryList);
@@ -51,7 +42,6 @@ function getDropDownMenu(){
             return `<option value="${d}">${d}</option>`
         });
 };
-
 //populate the country list by looping through the data set and appending country name to countryList
 function getCountryList(){
     countryArray = Object.values(totalData);  //code to get array of dictionaries
@@ -63,7 +53,6 @@ function getCountryList(){
     //console.log("country list",countryList);
     //console.log("unique country list",uniqueCountryList);
 };
-
 //Control what happens when a country from the dropdown is selected
 function updatePlotly() {
     // Use D3 to select the dropdown menu
@@ -74,19 +63,14 @@ function updatePlotly() {
     populationArray = filteredCountries.map(filteredCountries => filteredCountries.population);
     productionArray = filteredCountries.map(filteredCountries => filteredCountries.production);
     co2Array = filteredCountries.map(filteredCountries => filteredCountries.agri_co2);
-
     drawGraphs();
-
 };
-
-
 //Use filter to get records related to a country
 function filterCountryData(country){
     //console.log("country",country);
     //console.log("info",country);
     return country.area == dropDownValue;
 }
-
 //draw a graph
 //@param: x as years
 //@param: y as population
@@ -96,42 +80,62 @@ function drawGraphs(){
         y: populationArray,
         type:"bar"
     };
-
     var trace2 = {
         x: yearsArray,
         y: productionArray,
         type:"bar"
     };
-
     var trace3 = {
         x: yearsArray,
         y: co2Array,
         type:"bar"
     };
-
+    var trace4 = {
+    x: yearsArray, 
+    y: populationArray, 
+    z: productionArray,
+    mode: 'markers',
+    marker: {
+        size: 12,
+        line: {
+        color: 'rgba(217, 217, 217, 0.14)',
+        width: 0.5},
+        opacity: 0.8},
+    type: 'scatter3d'
+};
     var data1 = [trace1];
     var data2 = [trace2];
     var data3 = [trace3];
-
     var layout1 = {
         title: "Population over the years" ,
         yaxis: { title: "Population" },
         xaxis: { title: "Year" }
     };
-
     var layout2 = {
         title: "Production over the years" ,
         yaxis: { title: "Production" },
         xaxis: { title: "Year" }
     };
-
     var layout3 = {
         title: "CO2 emissions over the years" ,
         yaxis: { title: "CO2 emission" },
         xaxis: { title: "Year" }
     };
-
     Plotly.newPlot("bar1", data1, layout1);
     Plotly.newPlot("bar2", data2, layout2);
-    Plotly.newPlot("bar3", data3, layout3);
+    //Plotly.newPlot("bar3", data3, layout3);
+    var data4 = [trace4];
+    var layout4 = {margin: {
+        l: 0,
+        r: 0,
+        b: 0,
+        t: 0
+        },
+        scene: {
+            xaxis:{title: 'X AXIS TITLE'},
+            yaxis:{title: 'Y AXIS TITLE'},
+            zaxis:{title: 'Z AXIS TITLE'},
+            }};
+    Plotly.newPlot('bar3', data4, layout4);
+    
 };
