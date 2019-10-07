@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="ISO-8859-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>FAOSTAT</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- Our CSS -->
+  <link rel="stylesheet" type="text/css" href="./static/css/style.css">
+</head>
+<body>
+
+  <!-- The div that dropdown list-->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 jumbotron text-center">
+        <h1>FAOSTAT Dashboard</h1>
+        <p>Use the interactive charts below to explore the dataset</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="well">
+          <h6><b>Countries</b></h6>
+          <select id="selDataset"></select>
+          <!--onchange="optionChanged(this.value)"-->
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div id="sliderStart">
+        </div>
+        <div id="sliderEnd">
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- D3 JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+  <!-- D3 Simple Slider -->
+  <!-- <https://github.com/johnwalley/d3-simple-slider>-->
+  <script src="https://d3js.org/d3-format.v1.min.js"></script>
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="https://unpkg.com/d3-simple-slider"></script>
+  <!-- D3 Tips JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+  <!-- API KEY -->
+  <script type="text/javascript" src="./static/js/config.js"></script>
+  <!-- Our JavaScript -->
+  <script type="text/javascript" src="./static/js/app.js"></script>
+</body>
+</html>
