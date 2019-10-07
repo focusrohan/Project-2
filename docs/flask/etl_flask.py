@@ -138,9 +138,9 @@ def etl_faostat():
 
     # Get a dataframe with just area, year and population
     # remove all NaN values from the dataframe
-    total_df.dropna(axis=0, how="any", inplace=True)
-    pop_df = total_df[["id", "area", "year", "population"]]
-    total_dict_year = pop_df.to_dict(orient="records")
+    total_df = total_df.loc[(total_df['year'] >= 1995) &\
+                            (total_df['year'] <= 2015)]
+    total_df.fillna(0, inplace = True)
     total_dict = total_df.to_dict(orient="records")
 
     # Group by year with the sum aggregate function
@@ -148,15 +148,15 @@ def etl_faostat():
     # drop columns which contain no useful information
     groupby_year_df = total_df.groupby("year").sum()
     groupby_year_df['year'] = groupby_year_df.index
-    groupby_year_df = groupby_year_df.loc[(groupby_year_df['year'] >= 1997) &\
-                                        (groupby_year_df['year'] <= 2017)]
+    groupby_year_df = groupby_year_df.loc[(groupby_year_df['year'] >= 1995) &\
+                                        (groupby_year_df['year'] <= 2015)]
     groupby_year_df.drop(["area_code", "id"], axis=1, inplace=True)
 
     # Group by area name with the sum aggregate function
     # Limit the year range between 1997 till 2017
     # drop columns which contain no useful information
-    total_df = total_df.loc[(total_df['year'] >= 1997) &\
-                            (total_df['year'] <= 2017)]
+    total_df = total_df.loc[(total_df['year'] >= 1995) &\
+                            (total_df['year'] <= 2015)]
     groupby_area_df = total_df.groupby("area").sum()
     groupby_area_df['area'] = groupby_area_df.index
     groupby_area_df.drop(["area_code", "id", "year"], axis=1, inplace=True)
@@ -169,15 +169,13 @@ def etl_faostat():
     # not countries, groupby by year and country and the total dataframe
     master_dict = {
         "Areas": {
-            "Country": country_verified,
-            "Area": not_country
+            "Country": country_verified
         },
         "Groupby": {
             "Years": year_dict,
             "Countries": area_dict
         },
-        "Total_no_null": total_dict,
-        "Population": total_dict_year
+        "Total_Country": total_dict
     }
 
     # write the dataframe as a json file to a local file
@@ -248,12 +246,16 @@ def etl_geojson():
 
     # Delete these row indexes from dataFrame
     total_df.drop(index_list, inplace=True)
+    total_df = total_df.loc[(total_df['year'] >= 1995) &\
+                            (total_df['year'] <= 2015)]
+    total_df.fillna(0, inplace = True)
+
 
     # Group by area name with the sum aggregate function
     # Limit the year range between 1997 till 2017
     # drop columns which contain no useful information
-    total_df = total_df.loc[(total_df['year'] >= 1997) &\
-                            (total_df['year'] <= 2017)]
+    total_df = total_df.loc[(total_df['year'] >= 1995) &\
+                            (total_df['year'] <= 2015)]
     groupby_area_df = total_df.groupby("area").sum()
     groupby_area_df['area'] = groupby_area_df.index
     groupby_area_df.drop(["area_code", "id", "year"], axis=1, inplace=True)
@@ -293,7 +295,9 @@ def etl_dynamic(country, start_year, end_year):
     # make into a dataframe, use .loc() to parse out the area and year,
     # have return it as a dict
     df = pd.read_sql_query('select * from complete_merge_table', con=engine)
-    df.dropna(axis=0, how="any", inplace=True)
+    df = df.loc[(df['year'] >= 1995) &\
+                (df['year'] <= 2015)]
+    df.fillna(0, inplace = True)
     select_df = df.loc[(df['area'] == country) & (df['year'] >= start_year) & (df['year'] <= end_year)]
     dynamic_dict = select_df.to_dict(orient="records")
 
